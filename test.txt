@@ -1,5 +1,0 @@
-this is a test to delete with command git.
-
-
-q
-
