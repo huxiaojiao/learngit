@@ -6,3 +6,7 @@
 5.把一个文件放到git仓库分两步：第一步git add readme.txt(告诉git,把文件添加到仓库）；
 第二步git commit -m "wrote a readme file"(提交，-m后面输入的是本次提交的说明，可以输入任意内容但最好是有意义的。）
 * git add <file> 可以反复添加或同时添加多个文件。
+
+二.在本地进行修改
+1.git status；该命令可以让我们时刻掌握仓库当前的状态。
+2.git diff <file>:该命令可以查看对文件作了什么修改。
