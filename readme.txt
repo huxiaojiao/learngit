@@ -40,3 +40,20 @@ git reset HEAD file ：把暂存区的修改撤销掉，重新放回工作区。
 如果文件已经被添加到版本库，那么即使被删除也是可以被找回的: 
 git checkout -- file(已被删除的文件）可以将文件恢复到最新版本。
 
+
+六.远程仓库（github）
+1.本地git仓库和github仓库之间的传输是通过ssh加密的。
+在用户主目录下有.ssh目录，该目录下有id_rsa和id_rsa.pub两个文件，这两个就是ssh key的秘钥对，前者是私钥，后者是公钥。
+在github中需要设置添加公钥。
+为什么GitHub需要SSHKey呢？
+因为GitHub需要识别出你推送的提交确实是你推送的，而不是别人冒充的，而Git支持SSH协议，所以，GitHub只要知道了你的公钥，就可以确认只有你自己才能推送。
+
+2.先有本地库，再与远程库的关联：
+通常先有了本地库时，在github上新建一个空仓库;
+再根据github的提示，在本地的仓库目录下运行命令git remote add origin git@github.com:huxiaojiao/learngit.git；
+再输入git push -u origin master 将本地库的所有内容推送到远程库上。（第一次使用-u参数，可以将本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时可以简化命令。）；
+* git 默认远程库的名字是origin。
+
+3.先有远程库，后有本地库的关联：
+首先需要知道仓库的地址：git clone git@github.com:huxiaojiao/learngit.git
+* 在执行该命令时最好先切换到合适的目录下，以免造成新的仓库被放在另一个仓库的目录下
