@@ -10,3 +10,14 @@
 二.在本地进行修改
 1.git status；该命令可以让我们时刻掌握仓库当前的状态。
 2.git diff <file>:该命令可以查看对文件作了什么修改。
+3.git log:可以查看从近到远的提交历史记录；
+4.git log --pretty=oneline:可以看到更简洁的提交历史记录。
+5.git reset --hard HEAD^:可以把当前版本回退到上一个版本。（在git中，HEAD表示当前版本，HEAD^表示上一个版本）
+6.git reset --hard <版本号前一小串数字>:可以让指针指向任意一个版本。
+7.git reflog:用来记录你的每一次命令
+
+三.概念理解
+1.工作区（working directory）：即在电脑里能看到的目录
+2.版本库（.git）：工作区下的一个隐藏目录，是git的版本库。该版本库里包含stage（或者叫index），master以及指向master的一个指针HEAD。
+3.stage：暂存区，git add把文件添加进去实际上就是把文件修改添加到暂存区。
+4.如果不把修改添加到暂存区，是无法把修改提交的。
