@@ -53,6 +53,7 @@ git checkout -- file(已被删除的文件）可以将文件恢复到最新版�
 再根据github的提示，在本地的仓库目录下运行命令git remote add origin git@github.com:huxiaojiao/learngit.git；
 再输入git push -u origin master 将本地库的所有内容推送到远程库上。（第一次使用-u参数，可以将本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时可以简化命令。）；
 * git 默认远程库的名字是origin。
+* push之前应确保至少有一次commit才不会报错
 
 3.先有远程库，后有本地库的关联：
 首先需要知道仓库的地址：git clone git@github.com:huxiaojiao/learngit.git
