@@ -77,3 +77,4 @@ git merge {分支名}：该命令会将分支的改动合并到当前分支。
 git branch -d {分支名}：用来删除该分支
 
 3.解决冲突：
+create a new branch is quick AND simple.
