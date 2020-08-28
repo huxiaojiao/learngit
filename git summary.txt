@@ -1,0 +1,27 @@
+
+1. 首先，git 能做这么多事，其实是所有的信息都存在 .git 这样一个隐藏目录中，你可以用 ls 命令看看这个目录。如果这个目录被删了，那么一切 git 记录都没有了。
+2. 如果已经有一个 git repository 在 github 或者什么地方，那么你可以克隆下来。从 github 克隆你肯定会。事实上你还能从另一个目录中克隆，例如命令 git clone ~/Dir1/xxx/.git 就能把 xxx 这个 repository 克隆到当前目录，且仍然命令为 xxx (当然你也可以用 git clone ~/Dir1/xxx/.git yyy 来换个名字)。
+3. 除了克隆，你也可以在本地通过 git init 来初始化一个 git repository，这就会建立上面说的 .git 目录。
+4. 新 init 后的 repository，没有任何一个 commit，这时候，你就可以 add，commit 来产生第一个 commit。add 的时候可以一次 add 所有文件，也可以只 add 单个文件。add 后的文件也可以撤销 add。
+5. 默认状态下 init 后会有个分支，叫做 master 分支，其实就好比是指向 commit 的指针。
+6. 当你只有一个 commit 时，本地 master 分支自然指向它，此时假设你 push 了一下，那么 origin/master 也指向这个 commit了。当你再来一个 commit，本地的 master 分支自然就指向了第二个 commit 了，但是 origin/master 还指向第一个 commit，这种情况，就成为 local branch is ahead of remote master，这种情况就可以直接 push，即让 origin/master 和 本地 master 指向相同 commit。
+7. 假设现在你的本地 master 和 origin/master 都执行第二个 commit，然后另外一个人做了第 3 个 commit，并且也 push 了，则 origin/master 会指向第 3 个 commit。这些信息不回自动同步到你本地的，所以你需要 git fetch 一下。fetch 完了后，你本地就知道了有了第 3 个 commit 了，且 origin/master 会指向第 3 个 commit。此时，称为 local branch is behind remote master，于是你可以 git pull 一下，这个就和 push 是反过来的。会让你本地 master 分支也指向第 3 个 commit。pull 之后，那个人在第 3 个 commit 做的改动，就在你本地的文件上反映出来了。
+8. 以上都只有一条线，但是实际多人开发时，会出现分叉。接着上面的例子，假设你和某人的本地分支，还有 origin/master 都指向第 3 个 commit。这时候你们俩各自在本地 commit 了一次，然后他比你先 push，此时是：
+1 -------- 2 --------- 3 -------- 4 (his master & origin/master)
+                        \
+                         \--------5 (your master)
+上面，数字代表 commit 的序号，括号里面表示指向 commit 的分支。4 是他的 commit， 5 是你的 commit。对于上图的情形，你 fetch 之后就会发现，分叉了，即以 3 为基础产生了两个 commit 了。这时候你就需要 merge了。口头上（狭义）的 commit 一般不包括 merge，但实际上 merge 是 commit 的一种，也会留下节点的。你执行 git merge origin/master 之后，就会变成下面这样：
+
+1 -------- 2 --------- 3 -------- 4 (his master & origin/master)
+                        \                                      \
+                         \                                      \
+                          \--------5 ----------------------- 6 (your master)
+
+merge 的操作，会让 4 和 5 合起来，形成第 6 个 commit，并让你的 master 前进到 6，此时你又 ahead of origin/master 了，你就可以 push 了，等你 push 完了后，另外那个人就能直接 pull 了。
+9. 在你 merge 的时候，git 会尝试自动合并出 6 来，但是有时候自动合并会由于有冲突（conflicts）失败。例如如果 4 和 5 修改了同一个文件，并且 git 觉得它无法确定你们俩对同一个文件的修改应该怎么合并，git 就会报一个冲突，需要你手动修改这个文件，然后通过 add 它来表示 conflict is resolved，最后执行 git commit 来完成 merge。
+10. 除了默认的 master 分支，我们还可以新建分支。git checkout -b new_branch 就会创建一个 new_branch 分支，并且该分支会指向你执行此命令之前所在的分支指向的 commit，此外该命令还会自动切换到新分支。
+11. 你可以通过 git checkout <branch-name> 的命令在不同分支间切换。如果两个分支指向不同的 commit，那么你在他们之间切换之后，显然 repository 的目录和文件可能会变化。
+13. 本地新建分支后，origin 还没有同名分支，这时候 push 时就需要 set-upstream 才行，set-upstream 会在 origin 上创建同名分支并让他们绑定起来。
+14. git 有一个 HEAD 的概念，HEAD 其实就是当前分支所指向的 commit 就叫做 HEAD。
+15. git reset 可以用来让你回退。以上面第 8 点中的第一个图为例，你想从 5 回退到 3。这时候有两种模式 hard 和 soft。hard 就是直接回退，而 soft 则是让分支指向 3，但是 5 的所有修改还保留着，从而你可以在原本 5 的改动的基础上继续修改。两者对应命令分别是 git reset --hard HEAD^ 和 git reset --soft HEAD^。这里用到了 HEAD，就是前面说的概念，HEAD 后面有一个 ^，表示要回退一步（如从 5 退到 3），如果有多个 ^，表示要回退多步（如两个 ^ 表示从 5 退到 2）。
+16. 假如从 5 回退到了 3，并且也没有远程任何远程分支和本地分支指向 5，那么这个 commit 就会从你的 git log 中消失。此时，如果你忽然后悔了，想重新找回 5，那么可以执行 git reflog 来找到 5 个 commit id，有了 commit id，就可以执行 git reset --hard <commit-id> 来跳转到指定 commit。事实上 git reset --hard <commit-id> 可以跳转到任何 commit，只要你能知道 commit id。
